@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-class PageOne extends StatefulWidget {
-  const PageOne({Key? key}) : super(key: key);
+class CommonLayout extends StatelessWidget {
+  const CommonLayout({Key? key}) : super(key: key);
 
-  @override
-  State<PageOne> createState() => _PageOneState();
-}
-
-class _PageOneState extends State<PageOne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +25,7 @@ class _PageOneState extends State<PageOne> {
               children: [
                 Icon(Icons.access_alarm),
                 Container(
-                  child: Text("Reminder")
+                    child: Text("Reminder")
                 )
               ],
             ),
