@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'common_layout.dart';
 import 'pagetwo.dart';
+import 'coffee.dart';
+import 'todo.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -38,7 +40,26 @@ class _MainMenuState extends State<MainMenu> {
                 ),
               );
             },
-                child: Text("Maps Page Two"))
+                child: Text("Maps Page Two")
+            ),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CoffeeApp(),
+                ),
+              );
+            },
+                child: Text("Coffee App")
+            ),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => TodoApp(),
+                ),
+              );
+            },
+                child: Text("ToDo App")
+            ),
           ],
         )
       )

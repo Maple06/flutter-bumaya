@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class PageTwo extends StatelessWidget {
+class PageTwo extends StatefulWidget {
   const PageTwo({Key? key}) : super(key: key);
 
   @override
+  State<PageTwo> createState() => _PageTwoState();
+}
+
+class _PageTwoState extends State<PageTwo> {
+  bool isFavorited = false;
+  int favoriteCount = 40;
+  @override
   Widget build(BuildContext context) {
+    void toggleFavorite() {
+      setState((){
+        if (isFavorited) {
+          favoriteCount -= 1;
+          isFavorited = false;
+        } else {
+          favoriteCount += 1;
+          isFavorited = true;
+        }
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Maps")
@@ -42,12 +60,16 @@ class PageTwo extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 10),
                     child: Row(
                       children: [
-                        Icon(Icons.star, color: Colors.deepOrange),
-                        Text("4.7",
+                        IconButton(
+                            icon: (isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
+                            color: Colors.amber,
+                            onPressed: toggleFavorite
+                        ),
+                        Text("$favoriteCount",
                         style: TextStyle(
                             fontSize: 15,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
