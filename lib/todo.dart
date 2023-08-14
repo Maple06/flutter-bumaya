@@ -18,6 +18,76 @@ class _TodoAppState extends State<TodoApp> {
   ];
   List<bool> isChecked = [false, false, false, false, false, false];
 
+  void deleteItem(int index) {
+    if (!isChecked[index]) { // Only show confirmation modal if checkbox is false
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Hapus Tugas'),
+            content: Text('Tugas ini belum selesai. Apakah anda yakin?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the modal
+                },
+                child: Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the modal
+                  setState(() {
+                    todo.removeAt(index);
+                    isChecked.removeAt(index);
+                  });
+                },
+                child: Text('Hapus'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      setState(() {
+        todo.removeAt(index);
+        isChecked.removeAt(index);
+      });
+    }
+  }
+
+
+  void openEditTextModal(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Set this property to true
+      builder: (BuildContext context) {
+        return SingleChildScrollView( // Wrap with SingleChildScrollView
+          child: Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextFormField(
+                initialValue: todo[index],
+                onChanged: (newValue) {
+                  setState(() {
+                    todo[index] = newValue;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Edit Task',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,30 +106,47 @@ class _TodoAppState extends State<TodoApp> {
                     padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 12),
                     itemCount: todo.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 80,
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.brown[300]),
-                        child: Row(
-                          children: [
-                            SizedBox(width:15),
-                            Checkbox(
-                              value: isChecked[index],
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  if (newValue != null) {
-                                    isChecked[index] = newValue;
-                                  }
-                                });
-                              },
+                      return GestureDetector(
+                        onTap: () {
+                          openEditTextModal(context, index);
+                        },
+                        child: Container(
+                          height: 80,
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.brown[300]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: isChecked[index],
+                                        onChanged: (bool? newValue) {
+                                          setState(() {
+                                            if (newValue != null) {
+                                              isChecked[index] = newValue;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        '${todo[index]}',
+                                        style: TextStyle(
+                                          decoration: isChecked[index] ? TextDecoration.lineThrough : TextDecoration.none,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(onPressed: (){
+                                  deleteItem(index);
+                                }, icon: Icon(Icons.delete_outline))
+                              ],
                             ),
-                            Text(
-                              '${todo[index]}',
-                              style: TextStyle(
-                                  decoration: isChecked[index] ? TextDecoration.lineThrough : TextDecoration.none,
-                              ),
-                            )
-                          ],
+                          ),
                         ),
                       );
                     })),
